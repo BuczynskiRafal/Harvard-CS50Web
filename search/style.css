@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 20px;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #5f6368;
+    font-size: 14px;
+}
+
+form {
+    text-align: center;
+    margin-top: 20vh;
+}
+
+input[type=text] {
+    width: 35%;
+    height: 30px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+input[type=submit] {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    border: none;
+    color: white;
+    background-color: #4285f4;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+input[type=submit]:hover {
+    background-color: #357ae8;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type=text] {
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+.btn {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    border: none;
+    color: white;
+    background-color: #4285f4;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;   
+    appearance: none;        
+}
+
+.btn:hover {
+    background-color: #357ae8;
+}
+
+input[type=submit], button {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    border: none;
+    color: white;
+    background-color: #4285f4;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type=submit]:hover, button:hover {
+    background-color: #357ae8;
+}
+
+@media (max-width: 768px) {
+    input[type=text] {
+        width: 80%;
+    }
+}
