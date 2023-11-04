@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Google Search</a></li>
+                <li><a href="images.html">Google Images Search</a></li>
+                <li><a href="advanced.html">Advanced Search</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <form action="https://www.google.com/search" method="get">
+        <input type="text" name="q" id="search">
+        <input type="submit" value="Google Search" class="btn">
+        <button type="button" class="btn" onclick="feelingLucky(event)">I'm Feeling Lucky</button>
+    </form>
+
+    <script>
+        function feelingLucky(){
+            var searchBox = document.querySelector('#search');
+            var query = encodeURIComponent(searchBox.value);
+            window.location.href = "https://www.google.com/search?btnI=I&q=" + query;
+        }
+    </script>
+</body>
+</html>
