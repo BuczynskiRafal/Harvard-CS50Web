@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>My Listings</h2>
+
+    <div class="list-group">
+        {% for listing in my_listings %}
+            <a href="{% url 'listing' listing.id %}" class="list-group-item list-group-item-action">
+                {{ listing.title }}
+            </a>
+        {% empty %}
+            <p>No listings available.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

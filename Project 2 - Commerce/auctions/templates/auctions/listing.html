@@ -1,0 +1,106 @@
+{% extends "auctions/layout.html" %}
+
+{% block body  %}
+
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Listing Title: {{ listing.title }}</h3>
+
+                {% if not listing.active %}
+                    {% if user_is_winner %}
+                        <div class="alert alert-success">
+                            Congratulations! You have won this auction.
+                        </div>
+                        <h6>Winner: <span class="text-success">{{ listing.winner }}</span></h6>
+                    {% else %}
+                        <div class="alert alert-info">
+                            This auction is closed.
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <h6>Status: 
+                    {% if listing.active %}
+                    <span class="text-success">Active</span>
+
+                    {% else %}
+                    <span class="text-danger">Closed</span>
+                    
+                    {% endif %}
+                </h6>
+                <p class="card-text">Description: {{ listing.description }}</p>
+                <p class="card-text">Current Price: ${{ listing.current_price }}</p>
+                <p class="card-text">Category: {{ listing.category }}</p>
+                <p class="card-text">Created: {{ listing.create_date }}</p>
+                <p class="card-text">Creator: {{ listing.creator }}</p>
+                {% if listing.image_url %}
+                    <img src="{{ listing.image_url }}" alt="{{ listing.title}}" class="img-fluid">
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ bid_form.as_p }}
+                {% if message %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" name="place_bid" class="btn btn-primary">Place Bid</button>
+        </form>
+
+        <form method="post" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" name="toggle_watchlist" class="btn {% if on_watchlist %}btn-danger{% else %}btn-info{% endif %}">
+                {% if on_watchlist %}
+                    Remove from Watchlist
+                {% else %}
+                    Add to Watchlist
+                {% endif %}
+            </button>
+        </form>
+        
+        {% if request.user == listing.creator %}
+            <form method="post" class="mt-2">
+                {% csrf_token %}
+                {% if listing.active %}
+                    <button type="submit" name="close_auction" class="btn btn-warning">Close Auction</button>
+                {% else %}
+                    <button type="submit" name="reopen_auction" class="btn btn-warning">Reopen Auction</button>
+                {% endif %}
+            </form>
+        {% endif %}
+
+
+        <form method="post" class="mt-2">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ comment_form.as_p }}
+            </div>
+            <button type="submit" name="submit_comment" class="btn btn-secondary">Post Comment</button>
+        </form>
+
+
+        <div class="comments mt-3">
+            {% for comment in comments %}
+                <div class="comment">
+                    <strong>{{ comment.user }}:</strong>
+                    <p>{{ comment.text }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        {% for comment in comments %}
+            <div class="comment my-2">
+                <p><strong>{{ comment.user.username }}:</strong> {{ comment.comment }}</p>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+        
+    </div>
+
+{% endblock %}
