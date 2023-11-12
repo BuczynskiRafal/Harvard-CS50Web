@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body%}
+    <h2>Create New Listing</h2>
+
+    <form method="post" class="form-group">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-3">
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}
