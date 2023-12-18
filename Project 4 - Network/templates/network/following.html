@@ -1,0 +1,22 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="posts">
+        {% for post in posts %}
+        <div class="post">
+            <strong><a href="{% url 'profile' post.author.username %}">{{ post.author }}</a></strong>
+            <p>{{ post.content }}</p>
+            <div class="post-info">
+                <small>Posted at {{ post.timestamp }}</small>
+                {% if user.is_authenticated %}
+                <button onclick="toggleLike({{ post.id }})">
+                    Like <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>No posts to display.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
