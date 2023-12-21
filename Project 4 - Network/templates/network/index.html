@@ -1,0 +1,121 @@
+{% extends "network/layout.html" %}
+{% block script %}
+    <script>
+        function editPost(postId) {
+            const postElement = document.getElementById(`post-${postId}`);
+            if (!postElement) {
+                console.error('Post element not found');
+                return;
+            }
+
+            const existingTextarea = postElement.querySelector(`#edit-content-${postId}`);
+            if (existingTextarea) {
+                return;
+            }
+
+            const content = postElement.querySelector('.content');
+            if (!content) {
+                console.error('Content element not found');
+                return;
+            }
+
+            const currentContent = content.innerHTML;
+            content.innerHTML = `<textarea id="edit-content-${postId}">${currentContent}</textarea>`;
+            content.innerHTML += `<button onclick="savePost(${postId})">Save</button>`;
+        }
+
+
+        function savePost(postId) {
+            const updatedContent = document.getElementById(`edit-content-${postId}`).value;
+
+            fetch(`/edit_post/${postId}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    content: updatedContent
+                }),
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(result => {
+                const postElement = document.getElementById(`post-${postId}`);
+                const content = postElement.querySelector('.content');
+                content.innerHTML = updatedContent;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function toggleLike(postId) {
+            fetch(`/toggle_like/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ post_id: postId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likeCountElement = document.getElementById(`like-count-${postId}`);
+                likeCountElement.innerHTML = data.likes;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+    <div class="new-post-form">
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <textarea name="content" placeholder="What's on your mind?"></textarea>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="posts" >
+        {% for post in posts %}
+            <div class="post" id="post-{{ post.id }}">
+                <strong><a href="{% url 'profile' post.author.username %}">{{ post.author }}</a></strong>
+                <p class="content">{{ post.content }}</p>
+                {% if user.is_authenticated and post.author == user %}
+                    <button onclick="editPost({{ post.id }})">Edit</button>
+                {% endif %}
+                <div class="post-info">
+                    <small>Posted at {{ post.timestamp }}</small>
+                    {% if user.is_authenticated %}
+                    <button onclick="toggleLike({{ post.id }})">
+                        Like <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>No posts yet.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
